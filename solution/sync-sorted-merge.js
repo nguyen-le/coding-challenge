@@ -9,19 +9,20 @@ module.exports = (logSources, printer) => {
 
   for (let i = 0; i < logSources.length; i++) {
     const logSource = logSources[i];
-    minHeap.push({ logIndex: i, log: logSource.pop() });
+    minHeap.push({ logSource, log: logSource.pop() });
   }
 
   while (minHeap.size() > 0) {
     const el = minHeap.pop();
     printer.print(el.log);
 
-    if (!logSources[el.logIndex].drained) {
-      const log = logSources[el.logIndex].pop();
+    if (!el.logSource.drained) {
+      const log = el.logSource.pop();
       if (log) {
-        minHeap.push({ logIndex: el.logIndex, log });
+        minHeap.push({ logSource: el.logSource, log });
       }
     }
   }
+
   return console.log("Sync sort complete.");
 };
